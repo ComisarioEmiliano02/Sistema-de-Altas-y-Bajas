@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGAB-FIEE | Consola de Administración</title>
+    <style>
+        /* Paleta Institucional UV y Variables */
+        :root {
+            --uv-blue: #004A98;
+            --uv-blue-dark: #003366;
+            --uv-green: #71A031;
+            --bg-body: #F4F6F7;
+            --white: #FFFFFF;
+            --text-dark: #2C3E50;
+            --text-gray: #7F8C8D;
+            --border-color: #D5DBDB;
+            --sharp-radius: 3px;
+            --danger: #C0392B;
+            --success: #27AE60;
+        }
+
+        * { box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 0; }
+        body { background-color: var(--bg-body); color: var(--text-dark); line-height: 1.6; }
+
+        /* Header Ejecutivo */
+        header {
+            background-color: var(--uv-blue);
+            color: var(--white);
+            padding: 15px 40px;
+            border-bottom: 4px solid var(--uv-green);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .header-title h1 { font-size: 1.5rem; letter-spacing: 1px; text-transform: uppercase; }
+        .header-title span { color: var(--uv-green); }
+        .admin-profile { text-align: right; font-size: 0.85rem; }
+        .admin-profile strong { font-size: 1rem; }
+
+        /* Barra de Navegación */
+        .nav-bar {
+            background-color: var(--uv-blue-dark);
+            padding: 0 40px; display: flex; gap: 5px;
+        }
+        .nav-btn {
+            background: transparent; color: #BDC3C7; border: none; padding: 12px 25px;
+            font-size: 0.9rem; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: 0.3s;
+        }
+        .nav-btn:hover { color: var(--white); background-color: rgba(255,255,255,0.1); }
+        .nav-btn.active { color: var(--white); background-color: var(--uv-green); border-bottom: 3px solid var(--white); }
+
+        /* Contenedores */
+        .container { max-width: 1300px; margin: 30px auto; padding: 0 20px; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Paneles, KPIs y Tablas */
+        .panel { background: var(--white); border: 1px solid var(--border-color); border-radius: var(--sharp-radius); padding: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 20px;}
+        .panel-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--bg-body); padding-bottom: 15px; margin-bottom: 20px; }
+        .panel-header h2 { color: var(--uv-blue-dark); font-size: 1.2rem; }
+        
+        table { width: 100%; border-collapse: collapse; border: 1px solid var(--border-color); }
+        th, td { padding: 12px 15px; text-align: left; font-size: 0.9rem; }
+        th { background-color: #EAEDED; color: var(--uv-blue-dark); font-weight: bold; text-transform: uppercase; border-bottom: 2px solid var(--border-color); font-size: 0.8rem;}
+        td { border-bottom: 1px solid #EAEDED; vertical-align: middle; }
+        tr:hover { background-color: #F8F9F9; }
+
+        /* Badges */
+        .badge { padding: 4px 8px; font-size: 0.75rem; font-weight: bold; border-radius: 2px; text-transform: uppercase; display: inline-block;}
+        .b-alta { background: #D4E6F1; color: #2471A3; border: 1px solid #2471A3; }
+        .b-baja { background: #FADBD8; color: #C0392B; border: 1px solid #C0392B; }
+        .b-ok { background: #D5F5E3; color: #1E8449; }
+        .b-info { background: #E8F8F5; color: #117A65; border: 1px solid #117A65; }
+
+        /* Botones */
+        .btn { padding: 6px 12px; font-size: 0.8rem; font-weight: bold; border-radius: var(--sharp-radius); cursor: pointer; border: none; transition: 0.2s;}
+        .btn-approve { background-color: var(--success); color: white; }
+        .btn-approve:hover { background-color: #1E8449; }
+        .btn-reject { background-color: transparent; border: 1px solid var(--danger); color: var(--danger); }
+        .btn-reject:hover { background-color: var(--danger); color: white; }
+        .btn-primary { background-color: var(--uv-blue); color: white; padding: 10px 15px;}
+        .btn-primary:hover { background-color: var(--uv-blue-dark); }
+
+        /* Grid Catálogos */
+        .catalog-layout { display: grid; grid-template-columns: 250px 1fr; gap: 20px; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li { padding: 12px 15px; border-bottom: 1px solid var(--border-color); cursor: pointer; color: var(--uv-blue-dark); font-weight: bold; }
+        .sidebar-menu li:hover, .sidebar-menu li.active { background-color: var(--uv-green); color: white; }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; color: var(--text-dark); }
+        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 3px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title"><h1>SIGAB <span>FIEE</span> | Panel de Control</h1></div>
+        <div class="admin-profile"><strong>Secretaría Académica FIEE</strong><br>Administrador del Sistema (Rol: SuperAdmin)</div>
+    </header>
+
+    <div class="nav-bar">
+        <button class="nav-btn active" onclick="switchTab(event, 'tab-inbox')">Bandeja de Solicitudes</button>
+        <button class="nav-btn" onclick="switchTab(event, 'tab-audit')">Auditoría (Logs)</button>
+        <button class="nav-btn" onclick="switchTab(event, 'tab-catalogs')">Gestión de Catálogos</button>
+    </div>
+
+    <div class="container">
+        
+        <div id="tab-inbox" class="tab-content active">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Gestión de Peticiones en Tiempo Real</h2>
+                    <div style="font-size: 0.85rem; color: #922B21; background: #FDEDEC; padding: 5px 10px; border-left: 3px solid #C0392B;">
+                        Atención: Autorizar ejecutará los Triggers en la BD.
+                    </div>
+                </div>
+                
+                <table>
+                    <thead>
+                        <tr><th>Folio</th><th>Matrícula</th><th>Tipo</th><th>Materia (NRC)</th><th>Validación Lógica</th><th>Acción</th></tr>
+                    </thead>
+                    <tbody id="inbox-table-body">
+                        <tr id="row-5001">
+                            <td>TR-5001</td><td>S20004603</td><td><span class="badge b-alta">ALTA</span></td><td>Desarrollo Web (48911)</td>
+                            <td><span style="color: var(--success); font-weight: bold;">✔ Cupo: 4 / 30</span></td>
+                            <td>
+                                <button class="btn btn-approve" onclick="procesarTransaccion('row-5001', 'TR-5001', 'ALTA', '48911', 'S20004603')">Autorizar</button>
+                                <button class="btn btn-reject">Rechazar</button>
+                            </td>
+                        </tr>
+                        <tr id="row-5002">
+                            <td>TR-5002</td><td>S19005512</td><td><span class="badge b-baja">BAJA</span></td><td>Física General (46102)</td>
+                            <td><span style="color: var(--success); font-weight: bold;">✔ Bajas Restantes: 2</span></td>
+                            <td>
+                                <button class="btn btn-approve" onclick="procesarTransaccion('row-5002', 'TR-5002', 'BAJA', '46102', 'S19005512')">Autorizar</button>
+                                <button class="btn btn-reject">Rechazar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tab-audit" class="tab-content">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Historial de Auditoría (Logs de Triggers)</h2>
+                    <input type="date" style="padding: 5px; border: 1px solid #ccc;">
+                </div>
+                <p style="font-size: 0.9rem; color: var(--text-gray); margin-bottom: 15px;">Registro inmutable de transacciones. Los eventos recientes aparecerán automáticamente aquí al ser procesados por la BD.</p>
+                <table>
+                    <thead>
+                        <tr><th>Fecha y Hora</th><th>Folio</th><th>Operación Ejecutada en BD (Automática)</th><th>Revisor</th><th>Estatus Final</th></tr>
+                    </thead>
+                    <tbody id="audit-table-body">
+                        <tr>
+                            <td>12/Feb/2026 09:15:22</td><td>TR-4999</td>
+                            <td><strong>UPDATE</strong> Grupo_Oferta SET Cupo = Cupo + 1<br><span style="font-size: 0.8rem; color: var(--text-gray);">Trigger: TRG_Baja_Aprobada</span></td>
+                            <td>Admin_FIEE</td><td><span class="badge b-ok">Ejecutado</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tab-catalogs" class="tab-content">
+            <div class="catalog-layout">
+                <div class="panel" style="padding: 0;">
+                    <div style="padding: 15px; background: #EAEDED; border-bottom: 2px solid var(--border-color); font-weight: bold; text-transform: uppercase; font-size: 0.85rem; color: var(--uv-blue-dark);">Entidades Maestras</div>
+                    <ul class="sidebar-menu">
+                        <li>👩‍🎓 Alumnos</li>
+                        <li>👨‍🏫 Personal Docente</li>
+                        <li>📚 Experiencias Educativas</li>
+                        <li class="active">📅 Oferta de Grupos (NRC)</li>
+                    </ul>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>Gestión de Grupos y Aforos (NRC)</h2>
+                        <button class="btn btn-primary" onclick="alert('Abriendo modal para ejecutar: INSERT INTO Grupo_Oferta (NRC, ID_EE, Matricula_Personal...)')">➕ Aperturar Grupo</button>
+                    </div>
+
+                    <div style="background: var(--bg-body); padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid var(--border-color);">
+                        <h3 style="font-size: 1rem; margin-bottom: 10px; color: var(--uv-blue);">Configuración Rápida de Aforo</h3>
+                        <div style="display: flex; gap: 15px;">
+                            <div class="form-group" style="flex: 1;"><label>NRC a modificar</label><input type="text" value="48911" readonly></div>
+                            <div class="form-group" style="flex: 1;"><label>Nuevo Cupo Máximo</label><input type="number" value="35"></div>
+                            <div class="form-group" style="flex: 1; display:flex; align-items: flex-end;"><button class="btn btn-primary" style="width: 100%;">Actualizar Capacidad</button></div>
+                        </div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr><th>NRC</th><th>Materia Vinculada</th><th>Docente Asignado</th><th>Cupo Máx.</th><th>Disponibles</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><span class="badge b-info">48911</span></td><td>Desarrollo Web</td><td>Munguia Tiburcio Josué</td><td>30</td><td>4</td></tr>
+                            <tr><td><span class="badge b-info">47201</span></td><td>Redes de Computadoras</td><td>Pérez García Ana</td><td>25</td><td style="color: var(--danger); font-weight: bold;">0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Cambiar entre pestañas
+        function switchTab(event, tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Magia: Simular el Trigger en la Base de Datos
+        function procesarTransaccion(rowId, folio, tipo, nrc, matricula) {
+            // 1. Mostrar alerta al usuario
+            alert(`Ejecutando UPDATE en BD para el folio ${folio}...\n¡Trigger activado con éxito! Se ha modificado el aforo y la bitácora.`);
+            
+            // 2. Eliminar la fila de la bandeja de entrada
+            document.getElementById(rowId).remove();
+
+            // 3. Crear el log en la tabla de Auditoría
+            const fechaActual = new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'medium' });
+            let sqlSimulada = "";
+            let triggerName = "";
+
+            if(tipo === 'ALTA') {
+                sqlSimulada = `<strong>UPDATE</strong> Grupo_Oferta SET Cupo = Cupo - 1 WHERE NRC = ${nrc}`;
+                triggerName = "TRG_Alta_Aprobada";
+            } else {
+                sqlSimulada = `<strong>UPDATE</strong> Alumno SET Bajas_Disp = Bajas_Disp - 1 WHERE Mat = '${matricula}'`;
+                triggerName = "TRG_Baja_Aprobada";
+            }
+
+            const nuevaFila = `
+                <tr style="background-color: #E8F8F5;">
+                    <td>${fechaActual}</td>
+                    <td>${folio}</td>
+                    <td>${sqlSimulada}<br><span style="font-size: 0.8rem; color: #7F8C8D;">Trigger: ${triggerName}</span></td>
+                    <td>Admin_FIEE</td>
+                    <td><span class="badge b-ok">Aprobado</span></td>
+                </tr>
+            `;
+            
+            // Insertar al inicio de la tabla de auditoría
+            document.getElementById('audit-table-body').insertAdjacentHTML('afterbegin', nuevaFila);
+        }
+    </script>
+</body>
+</html>

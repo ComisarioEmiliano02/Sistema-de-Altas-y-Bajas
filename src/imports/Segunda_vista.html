@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGAB-FIEE | Mi Perfil Universitario</title>
+    <style>
+        /* Paleta Institucional UV (Estilo Premium) */
+        :root {
+            --uv-blue: #004A98;
+            --uv-blue-dark: #003366;
+            --uv-green: #71A031;
+            --bg-body: #F4F6F7;
+            --white: #FFFFFF;
+            --text-dark: #2C3E50;
+            --text-gray: #7F8C8D;
+            --border-color: #D5DBDB;
+            --sharp-radius: 3px; /* Bordes institucionales */
+        }
+
+        * { box-sizing: border-box; font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        body { background-color: var(--bg-body); color: var(--text-dark); }
+
+        /* Header Institucional */
+        header {
+            background-color: var(--uv-blue);
+            color: var(--white);
+            padding: 15px 40px;
+            border-bottom: 4px solid var(--uv-green);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-title h1 { font-size: 1.5rem; letter-spacing: 1px; }
+        .header-title span { color: var(--uv-green); }
+        .header-info { font-size: 0.9rem; text-align: right; }
+
+        /* Navegación Principal */
+        .nav-bar {
+            background-color: var(--uv-blue-dark);
+            padding: 0 40px;
+            display: flex;
+            gap: 5px;
+        }
+        .nav-btn {
+            background: transparent;
+            color: #BDC3C7;
+            border: none;
+            padding: 15px 25px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .nav-btn:hover { color: var(--white); background-color: rgba(255,255,255,0.1); }
+        .nav-btn.active {
+            color: var(--white);
+            background-color: var(--uv-green);
+            border-bottom: 3px solid var(--white);
+        }
+
+        /* Contenedor Principal */
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Tarjetas de Información */
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--sharp-radius);
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            border-bottom: 2px solid var(--bg-body);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            color: var(--uv-blue-dark);
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+        }
+
+        /* Grid del Dashboard (Inicio) */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+
+        /* Perfil de Alumno */
+        .profile-box { text-align: center; }
+        .profile-photo {
+            width: 120px; height: 120px;
+            background-color: #E5E8E8;
+            border: 3px solid var(--border-color);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center;
+            color: #ABB2B9; font-size: 3rem;
+        }
+        .profile-details { text-align: left; margin-top: 20px; }
+        .data-row { margin-bottom: 10px; }
+        .data-label { font-size: 0.75rem; color: var(--text-gray); text-transform: uppercase; font-weight: bold; }
+        .data-value { font-size: 1rem; color: var(--uv-blue-dark); font-weight: bold; }
+
+        /* Métricas (KPIs) */
+        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
+        .kpi-box { background: var(--bg-body); border-left: 4px solid var(--uv-green); padding: 15px; }
+        .kpi-box h3 { font-size: 2rem; color: var(--uv-blue); margin: 5px 0 0 0; }
+
+        /* Tablas */
+        table { width: 100%; border-collapse: collapse; border: 1px solid var(--border-color); }
+        th, td { padding: 12px; text-align: left; font-size: 0.9rem; }
+        th { background-color: #EAEDED; color: var(--uv-blue-dark); font-weight: bold; border-bottom: 2px solid var(--border-color); text-transform: uppercase; }
+        td { border-bottom: 1px solid #EAEDED; }
+        tr:nth-child(even) { background-color: #F9F9F9; }
+
+        /* Estados de Filas */
+        .row-restricted { background-color: #F2F4F4 !important; opacity: 0.6; }
+        .row-restricted td { color: #95A5A6; }
+
+        /* Botones e Indicadores */
+        .btn { padding: 7px 15px; border: none; font-weight: bold; font-size: 0.8rem; cursor: pointer; border-radius: var(--sharp-radius); text-transform: uppercase;}
+        .btn-baja { background: white; color: #C0392B; border: 1px solid #C0392B; }
+        .btn-baja:hover { background: #C0392B; color: white; }
+        .btn-alta { background: var(--uv-green); color: white; }
+        .btn-alta:hover { background: #5D8528; }
+        .btn-disabled { background: #BDC3C7; color: white; cursor: not-allowed; }
+
+        .badge { padding: 4px 8px; font-size: 0.75rem; font-weight: bold; border-radius: 2px; }
+        .bg-green { background: #D5F5E3; color: #1E8449; }
+        .bg-red { background: #FADBD8; color: #C0392B; }
+        .bg-gray { background: #E5E8E8; color: #7F8C8D; border: 1px solid #BDC3C7;}
+        .bg-yellow { background: #FCF3CF; color: #D68910; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">
+            <h1>SIGAB <span>FIEE</span></h1>
+        </div>
+        <div class="header-info">
+            <strong>Universidad Veracruzana</strong><br>
+            Ventanilla Virtual: Feb - Jul 2026
+        </div>
+    </header>
+
+    <div class="nav-bar">
+        <button class="nav-btn active" onclick="switchTab(event, 'tab-inicio')">Panel General</button>
+        <button class="nav-btn" onclick="switchTab(event, 'tab-bajas')">Trámite de Bajas</button>
+        <button class="nav-btn" onclick="switchTab(event, 'tab-altas')">Trámite de Altas</button>
+    </div>
+
+    <div class="container">
+        
+        <div id="tab-inicio" class="tab-content active">
+            <div class="dashboard-grid">
+                
+                <div class="card profile-box">
+                    <div class="card-header">Expediente Académico</div>
+                    <div class="profile-photo">👤</div>
+                    <h3 style="color: var(--uv-blue);">Emiliano Figueroa Monroy</h3>
+                    
+                    <div class="profile-details">
+                        <div class="data-row">
+                            <div class="data-label">Matrícula Institucional</div>
+                            <div class="data-value">S20004603</div>
+                        </div>
+                        <div class="data-row">
+                            <div class="data-label">Programa Educativo</div>
+                            <div class="data-value">Ingeniería Informática</div>
+                        </div>
+                        <div class="data-row">
+                            <div class="data-label">Estatus / Semestre</div>
+                            <div class="data-value">Alumno Regular • 6° Semestre</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="kpi-grid">
+                        <div class="kpi-box">
+                            <div class="data-label">Bajas Disponibles</div>
+                            <h3>3 <span style="font-size:1rem; color:#7F8C8D;">de 5 permitidas</span></h3>
+                        </div>
+                        <div class="kpi-box" style="border-left-color: var(--uv-blue);">
+                            <div class="data-label">Créditos Cursados</div>
+                            <h3>145 <span style="font-size:1rem; color:#7F8C8D;">créditos</span></h3>
+                        </div>
+                        <div class="kpi-box" style="border-left-color: #F39C12;">
+                            <div class="data-label">Trámites en Proceso</div>
+                            <h3>1 <span style="font-size:1rem; color:#7F8C8D;">solicitud</span></h3>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">Historial de Transacciones (Trazabilidad)</div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Folio</th>
+                                    <th>Fecha</th>
+                                    <th>Trámite</th>
+                                    <th>Experiencia Educativa (NRC)</th>
+                                    <th>Estatus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#TR-1045</td>
+                                    <td>10/Feb/2026</td>
+                                    <td>ALTA</td>
+                                    <td>Gestión de Proyectos (49022)</td>
+                                    <td><span class="badge bg-yellow">Pendiente (En Fila)</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#TR-0892</td>
+                                    <td>08/Feb/2026</td>
+                                    <td>BAJA</td>
+                                    <td>Física General (54321)</td>
+                                    <td><span class="badge bg-green">Aprobada</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-bajas" class="tab-content">
+            <div class="card">
+                <div class="card-header">Mi Horario Actual - Cancelación de Inscripción</div>
+                <p style="margin-bottom: 20px; font-size: 0.9rem; color: var(--text-gray);">
+                    A continuación se listan las Experiencias Educativas cargadas actualmente en tu matrícula. Si confirmas una baja, 
+                    el sistema descontará el movimiento de tus bajas permitidas de forma irreversible.
+                </p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>NRC</th>
+                            <th>Experiencia Educativa</th>
+                            <th>Catedrático</th>
+                            <th>Horario / Aula</th>
+                            <th>Acción Operativa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>45892</strong></td>
+                            <td>Bases de Datos Relacionales</td>
+                            <td>Munguia Tiburcio Josué Shinoe</td>
+                            <td>Lu-Mi-Vi 10:00-11:00 (A1)</td>
+                            <td><button class="btn btn-baja" onclick="alert('Generando Solicitud Transaccional de Baja...')">Efectuar Baja</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>45895</strong></td>
+                            <td>Ingeniería de Software</td>
+                            <td>Pérez García Ana María</td>
+                            <td>Ma-Ju 08:00-10:00 (L3)</td>
+                            <td><button class="btn btn-baja">Efectuar Baja</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>46102</strong></td>
+                            <td>Sistemas Operativos</td>
+                            <td>Hernández López Carlos</td>
+                            <td>Lu-Mi-Vi 11:00-12:00 (A2)</td>
+                            <td><button class="btn btn-baja">Efectuar Baja</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="tab-altas" class="tab-content">
+            <div class="card">
+                <div class="card-header">Catálogo de Oferta Institucional - Adición de Materias</div>
+                <p style="margin-bottom: 20px; font-size: 0.9rem; color: var(--text-gray);">
+                    El sistema aplica filtros de integridad referencial. Las materias que ya cursas o que carecen de cupo se encuentran deshabilitadas por regla de negocio.
+                </p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>NRC</th>
+                            <th>Experiencia Educativa</th>
+                            <th>Horario / Aula</th>
+                            <th>Aforo Actual</th>
+                            <th>Estatus</th>
+                            <th>Acción Operativa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="row-restricted">
+                            <td>45892</td>
+                            <td>Bases de Datos Relacionales</td>
+                            <td>Lu-Mi-Vi 10:00-11:00</td>
+                            <td>--</td>
+                            <td><span class="badge bg-gray">Materia Inscrita</span></td>
+                            <td><button class="btn btn-disabled">Bloqueado</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>48911</strong></td>
+                            <td>Desarrollo de Aplicaciones Web</td>
+                            <td>Lu-Mi 12:00-14:00 (CC1)</td>
+                            <td><strong>4 / 30</strong></td>
+                            <td><span class="badge bg-green">Cupo Disponible</span></td>
+                            <td><button class="btn btn-alta" onclick="alert('Enviando solicitud al servidor. Posición en fila: 1.')">Solicitar Alta</button></td>
+                        </tr>
+                        <tr class="row-restricted">
+                            <td>47201</td>
+                            <td>Redes de Computadoras</td>
+                            <td>Ma-Ju 10:00-12:00</td>
+                            <td><strong>0 / 25</strong></td>
+                            <td><span class="badge bg-red">Cupo Agotado</span></td>
+                            <td><button class="btn btn-disabled">Inviable</button></td>
+                        </tr>
+                        <tr>
+                            <td><strong>49022</strong></td>
+                            <td>Gestión de Proyectos de TI</td>
+                            <td>Vi 14:00-17:00 (A4)</td>
+                            <td><strong>15 / 35</strong></td>
+                            <td><span class="badge bg-green">Cupo Disponible</span></td>
+                            <td><button class="btn btn-alta">Solicitar Alta</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function switchTab(event, tabId) {
+            const contents = document.querySelectorAll('.tab-content');
+            const btns = document.querySelectorAll('.nav-btn');
+            contents.forEach(c => c.classList.remove('active'));
+            btns.forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>

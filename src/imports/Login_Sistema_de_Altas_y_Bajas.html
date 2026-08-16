@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGAB-FIEE | Acceso Estudiantil</title>
+    <style>
+        /* Variables de colores institucionales y de diseño */
+        :root {
+            --uv-blue: #004A98;
+            --uv-blue-dark: #002B5E;
+            --uv-green: #88B24B;
+            --text-dark: #2C3E50;
+            --text-muted: #7F8C8D;
+            --border-color: #E0E6ED;
+            --white: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background-color: var(--white);
+            overflow: hidden; /* Evitar scroll en desktop */
+        }
+
+        /* =========================================
+           PANEL IZQUIERDO: LOGIN (Fijo)
+        ========================================= */
+        .login-panel {
+            width: 450px;
+            background-color: var(--white);
+            display: flex;
+            flex-direction: column;
+            padding: 50px;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.05);
+            z-index: 10;
+            position: relative;
+        }
+
+        .logo-container {
+            margin-bottom: 50px;
+            margin-top: 20px;
+        }
+
+        .logo-container h1 {
+            color: var(--uv-blue);
+            font-size: 2.2rem;
+            letter-spacing: -1px;
+        }
+
+        .logo-container span {
+            color: var(--uv-green);
+        }
+
+        .login-header {
+            margin-bottom: 35px;
+        }
+
+        .login-header h2 {
+            color: var(--text-dark);
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        /* Formulario */
+        .form-group { margin-bottom: 25px; }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .input-group {
+            display: flex;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: #F8FAFC;
+        }
+
+        .input-group:focus-within {
+            border-color: var(--uv-blue);
+            background: var(--white);
+            box-shadow: 0 0 0 3px rgba(0, 74, 152, 0.1);
+        }
+
+        .input-prefix {
+            background-color: #EDF2F7;
+            color: var(--uv-blue-dark);
+            font-weight: bold;
+            padding: 14px 18px;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group input {
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 14px 15px;
+            background: transparent;
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
+
+        .simple-input {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #F8FAFC;
+            transition: all 0.3s ease;
+        }
+
+        .simple-input:focus {
+            background: var(--white);
+            border-color: var(--uv-blue);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 74, 152, 0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            background-color: var(--uv-blue);
+            color: var(--white);
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .btn-login:hover { background-color: var(--uv-blue-dark); }
+        .btn-login:active { transform: scale(0.98); }
+
+        .footer-links {
+            margin-top: auto;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .footer-links a {
+            color: var(--uv-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* =========================================
+           PANEL DERECHO: INFORMATIVO / EDUCATIVO
+        ========================================= */
+        .info-panel {
+            flex: 1;
+            background: linear-gradient(135deg, var(--uv-blue-dark) 0%, var(--uv-blue) 100%);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 60px;
+            color: var(--white);
+            overflow: hidden;
+        }
+
+        /* Patrón de fondo geométrico sutil (decorativo) */
+        .info-panel::before {
+            content: '';
+            position: absolute;
+            top: -10%; left: -10%;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(136,178,75,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .info-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -20%; right: -10%;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .info-content {
+            position: relative;
+            z-index: 2;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .info-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .info-content h2 strong { font-weight: 700; }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+            display: block;
+        }
+
+        /* Tarjetas de Avisos (Estilo Glassmorphism) */
+        .notice-board {
+            display: grid;
+            gap: 20px;
+        }
+
+        .notice-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px 25px;
+            border-radius: 12px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .notice-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .notice-icon {
+            font-size: 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        .notice-text h4 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--white);
+        }
+
+        .notice-text p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
+
+        /* Diseño Responsivo */
+        @media (max-width: 900px) {
+            body { flex-direction: column; overflow: auto; }
+            .login-panel { width: 100%; min-height: 100vh; justify-content: center; }
+            .info-panel { display: none; /* Ocultar panel derecho en móviles para priorizar el login */ }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PANEL IZQUIERDO: Formulario de Login -->
+    <div class="login-panel">
+        <div class="logo-container">
+            <h1>SIGAB<span>FIEE</span></h1>
+        </div>
+
+        <div class="login-header">
+            <h2>Iniciar Sesión</h2>
+            <p>Ingresa tus credenciales universitarias para gestionar tu trayectoria académica.</p>
+        </div>
+
+        <form id="loginForm" onsubmit="procesarLogin(event)">
+            
+            <!-- Matrícula -->
+            <div class="form-group">
+                <label for="matricula">Matrícula Estudiantil</label>
+                <div class="input-group">
+                    <span class="input-prefix">S</span>
+                    <input type="text" id="matricula" placeholder="Ej. 20004603" maxlength="8" required autocomplete="username">
+                </div>
+            </div>
+
+            <!-- Contraseña -->
+            <div class="form-group">
+                <label for="password">Contraseña (Portal MiUV)</label>
+                <input type="password" id="password" class="simple-input" placeholder="••••••••" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="btn-login">Acceder al Sistema</button>
+        </form>
+
+        <div class="footer-links">
+            <p>¿Problemas para entrar? <br><a href="#">Contactar a Secretaría Académica</a> o <a href="#">Restablecer contraseña</a></p>
+        </div>
+    </div>
+
+    <!-- PANEL DERECHO: Tablero Universitario Educativo -->
+    <div class="info-panel">
+        <div class="info-content">
+            <h2>Bienvenido al <strong>Portal Académico</strong></h2>
+            <span class="subtitle">Facultad de Ingeniería Eléctrica y Electrónica</span>
+
+            <div class="notice-board">
+                <!-- Aviso 1 -->
+                <div class="notice-card">
+                    <div class="notice-icon">📅</div>
+                    <div class="notice-text">
+                        <h4>Periodo de Altas y Bajas</h4>
+                        <p>Recuerda que el sistema se habilitará automáticamente el próximo lunes a las 08:00 hrs. Ten listos tus números de NRC para agilizar el proceso.</p>
+                    </div>
+                </div>
+
+                <!-- Aviso 2 -->
+                <div class="notice-card">
+                    <div class="notice-icon">📚</div>
+                    <div class="notice-text">
+                        <h4>Recuerda asistir a las Asesorias con tu Tutor</h4>
+                        <p>Es importante seguir las recomendaciones de tu Tutor para saber que materias dar de alta y baja.</p>
+                    </div>
+                </div>
+
+                <!-- Aviso 3 -->
+                <div class="notice-card">
+                    <div class="notice-icon">⚙️</div>
+                    <div class="notice-text">
+                        <h4>Soporte Técnico</h4>
+                        <p>Si experimentas problemas con tu cuenta, acude al área de administración edificio principal o envía un correo.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Validar que el usuario solo ingrese números en la matrícula
+        document.getElementById('matricula').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, ''); 
+        });
+
+        function procesarLogin(event) {
+            event.preventDefault(); 
+            
+            const matriculaNumeros = document.getElementById('matricula').value;
+            const matriculaCompleta = "S" + matriculaNumeros;
+
+            if(matriculaNumeros.length < 8) {
+                alert("La matrícula debe contener 8 números después de la 'S'.");
+                return;
+            }
+
+            // Simulación de éxito
+            alert(`✅ Identidad verificada.\nMatrícula: ${matriculaCompleta}\n\nCargando panel académico...`);
+        }
+    </script>
+</body>
+</html>
