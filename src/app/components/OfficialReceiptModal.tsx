@@ -42,7 +42,7 @@ export const OfficialReceiptModal: React.FC<OfficialReceiptModalProps> = ({ tran
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-2xl font-black tracking-tight text-[#004A98]">
-                  SIGAB <span className="text-[#71A031]">FIEE</span>
+                  Sistema de <span className="text-[#71A031]">Altas y Bajas</span>
                 </span>
                 <span className="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-mono font-semibold">
                   SISTEMA OFICIAL

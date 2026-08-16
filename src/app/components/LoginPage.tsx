@@ -33,25 +33,6 @@ export function LoginPage() {
     }
   }
 
-  // Quick Demo Access Helper
-  function quickLogin(role: "student" | "admin") {
-    if (role === "student") {
-      setMatricula("20004603");
-      setPassword("12345678");
-      toast.success("Acceso rápido como Estudiante", {
-        description: "Emiliano Figueroa Monroy (S20004603)",
-      });
-      navigate("/estudiante");
-    } else {
-      setMatricula("00000000");
-      setPassword("admin123");
-      toast.success("Acceso rápido como Administrador", {
-        description: "Secretaría Académica FIEE",
-      });
-      navigate("/admin");
-    }
-  }
-
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-white">
       {/* Left Column: Login Form Panel */}
@@ -64,7 +45,7 @@ export function LoginPage() {
             </div>
             <div>
               <h1 className="text-2xl font-black tracking-tight text-[#004A98] leading-none">
-                SIGAB <span className="text-[#71A031]">FIEE</span>
+                Sistema de <span className="text-[#71A031]">Altas y Bajas</span>
               </h1>
               <span className="text-[11px] text-slate-500 font-semibold tracking-wide">
                 Universidad Veracruzana • Portal Académico
@@ -124,29 +105,6 @@ export function LoginPage() {
               <span>➔</span>
             </button>
           </form>
-
-          {/* Quick Demo Access Bar */}
-          <div className="mt-8 pt-6 border-t border-slate-200">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2 text-center">
-              Acceso Rápido para Grabación de Demo
-            </span>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => quickLogin("student")}
-                className="py-2.5 px-3 bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 rounded-xl text-xs font-bold transition-colors cursor-pointer text-center"
-              >
-                👨‍🎓 Como Alumno
-              </button>
-              <button
-                type="button"
-                onClick={() => quickLogin("admin")}
-                className="py-2.5 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-xl text-xs font-bold transition-colors cursor-pointer text-center"
-              >
-                🛡️ Como Admin
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Footer info */}

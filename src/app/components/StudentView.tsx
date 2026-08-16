@@ -147,7 +147,7 @@ export function StudentView() {
             </div>
             <div>
               <h1 className="text-xl font-black tracking-tight leading-none">
-                SIGAB <span className="text-[#88B24B]">FIEE</span>
+                Sistema de <span className="text-[#88B24B]">Altas y Bajas</span>
               </h1>
               <span className="text-[11px] text-white/80 tracking-wide block">
                 Sistema Integral de Gestión de Altas y Bajas • Ventanilla Virtual Feb–Jul 2026

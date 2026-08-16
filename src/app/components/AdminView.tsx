@@ -83,7 +83,7 @@ export function AdminView() {
             </div>
             <div>
               <h1 className="text-xl font-black tracking-tight leading-none uppercase">
-                SIGAB <span className="text-[#88B24B]">FIEE</span> | Panel de Control
+                Sistema de <span className="text-[#88B24B]">Altas y Bajas</span> | Panel de Control
               </h1>
               <span className="text-[11px] text-white/80 tracking-wide block">
                 Secretaría Académica • Módulo de Dictamen y Auditoría en Tiempo Real
